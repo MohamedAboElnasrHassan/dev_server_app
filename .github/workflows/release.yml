@@ -1,0 +1,158 @@
+name: Release Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (without v prefix)'
+        required: true
+        default: '1.0.2'
+      build_number:
+        description: 'Build number'
+        required: true
+        default: '3'
+      is_required:
+        description: 'Is this update required?'
+        required: true
+        default: false
+        type: boolean
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Build Windows
+        run: flutter build windows --release
+      - name: Create Installer
+        run: |
+          # Get version from tag
+          $VERSION = "${{ github.ref_name }}" -replace "v", ""
+
+          # Create Inno Setup script
+          $INNO_SCRIPT = @"
+          #define MyAppName "Dev Server"
+          #define MyAppVersion "$VERSION"
+          #define MyAppPublisher "Mohamed Abo Elnasr Hassan"
+          #define MyAppURL "https://github.com/MohamedAboElnasrHassan/dev_server_app"
+          #define MyAppExeName "dev_server.exe"
+          #define MyAppId "{{E8F3AC9B-2B4E-45A1-A1AA-2948FF9F7C7A}"
+
+          [Setup]
+          AppId={#MyAppId}
+          AppName={#MyAppName}
+          AppVersion={#MyAppVersion}
+          AppPublisher={#MyAppPublisher}
+          AppPublisherURL={#MyAppURL}
+          AppSupportURL={#MyAppURL}
+          AppUpdatesURL={#MyAppURL}
+          DefaultDirName={autopf}\{#MyAppName}
+          DisableProgramGroupPage=yes
+          LicenseFile=LICENSE
+          OutputDir=releases\$VERSION
+          OutputBaseFilename=dev_server-v$VERSION-setup
+          Compression=lzma
+          SolidCompression=yes
+          WizardStyle=modern
+
+          [Languages]
+          Name: "english"; MessagesFile: "compiler:Default.isl"
+          Name: "arabic"; MessagesFile: "compiler:Languages\Arabic.isl"
+
+          [Tasks]
+          Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+
+          [Files]
+          Source: "build\windows\x64\runner\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+          Source: "LICENSE"; DestDir: "{app}"; Flags: ignoreversion
+
+          [Icons]
+          Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+          Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+
+          [Run]
+          Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+          "@
+
+          # Save Inno Setup script
+          $INNO_SCRIPT | Out-File -FilePath "installer.iss" -Encoding utf8
+
+          # Download and install Inno Setup
+          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "is.exe"
+          Start-Process -FilePath "is.exe" -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait
+
+          # Create installer
+          Start-Process -FilePath "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" -ArgumentList "installer.iss" -Wait
+
+          # Create releases directory if it doesn't exist
+          New-Item -ItemType Directory -Force -Path "releases\$VERSION"
+
+          # Copy executable to releases directory
+          Copy-Item "build\windows\x64\runner\Release\dev_server.exe" -Destination "releases\$VERSION\dev_server-v$VERSION.exe"
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-artifacts
+          path: |
+            releases/${{ github.ref_name }}/dev_server-v*-setup.exe
+            releases/${{ github.ref_name }}/dev_server-v*.exe
+
+  create-release:
+    needs: [build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+      - name: Get version from tag or input
+        id: get_version
+        run: |
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+            echo "IS_REQUIRED=false" >> $GITHUB_ENV
+          else
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+            echo "IS_REQUIRED=${{ github.event.inputs.is_required }}" >> $GITHUB_ENV
+          fi
+      - name: Update app-config.json
+        run: |
+          if [[ -f "tools/app-config.json" ]]; then
+            # Update version in app-config.json
+            jq '.app.version = "${{ env.VERSION }}" | .update.latest_version = "${{ env.VERSION }}" | .update.is_required = ${{ env.IS_REQUIRED }}' tools/app-config.json > temp.json
+            mv temp.json tools/app-config.json
+            echo "Updated app-config.json with version ${{ env.VERSION }} and is_required=${{ env.IS_REQUIRED }}"
+          fi
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ env.VERSION }}
+          files: |
+            artifacts/windows-artifacts/dev_server-v*-setup.exe
+            artifacts/windows-artifacts/dev_server-v*.exe
+            tools/app-config.json
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          body: |
+            ## Dev Server v${{ env.VERSION }}
+
+            ### Changes
+            - Automatic release from GitHub Actions
+            - See CHANGELOG.md for details
+
+            ### Downloads
+            - Windows: dev_server-v${{ env.VERSION }}-setup.exe
+            - Configuration: app-config.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
