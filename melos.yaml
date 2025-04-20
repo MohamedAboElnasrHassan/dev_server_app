@@ -1,0 +1,156 @@
+name: dev_server
+description: Dev Server monorepo with auto-update and GitHub integration
+repository: https://github.com/MohamedAboElnasrHassan/dev_server
+
+packages:
+  - apps/*
+  - packages/*
+
+sdkPath: auto
+
+command:
+  bootstrap:
+    usePubspecOverrides: true
+    runPubGetInParallel: true
+
+ide:
+  intellij:
+    enabled: true
+  vscode:
+    enabled: true
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+scripts:
+  # أوامر التطوير
+  analyze:
+    description: Run `flutter analyze` in all packages
+    run: melos exec -- "flutter analyze"
+    select-package:
+      flutter: true
+      dir-exists: lib
+
+  format:
+    description: Run `flutter format` in all packages
+    run: melos exec -- "flutter format ."
+    select-package:
+      flutter: true
+      dir-exists: lib
+
+  lint:all:
+    description: Run analyze and format on all packages
+    run: |
+      melos run analyze
+      melos run format
+
+  clean:deep:
+    description: Clean all build and temporary files
+    run: |
+      git clean -x -d -f -q
+      melos exec -- "flutter clean"
+
+  test:
+    description: Run tests in all packages
+    run: melos exec -- "flutter test"
+    select-package:
+      flutter: true
+      dir-exists: test
+
+  # أوامر البناء
+  build:windows:
+    description: Build Windows app
+    run: |
+      cd apps/dev_server_app && flutter build windows --release
+    select-package:
+      scope: "dev_server_app"
+
+  build:macos:
+    description: Build macOS app
+    run: |
+      cd apps/dev_server_app && flutter build macos --release
+    select-package:
+      scope: "dev_server_app"
+
+  build:linux:
+    description: Build Linux app
+    run: |
+      cd apps/dev_server_app && flutter build linux --release
+    select-package:
+      scope: "dev_server_app"
+
+  build:android:
+    description: Build Android app
+    run: |
+      cd apps/dev_server_app && flutter build apk --release
+    select-package:
+      scope: "dev_server_app"
+
+  build:ios:
+    description: Build iOS app
+    run: |
+      cd apps/dev_server_app && flutter build ios --release --no-codesign
+    select-package:
+      scope: "dev_server_app"
+
+  build:all:
+    description: Build all platforms
+    run: |
+      melos run build:windows
+      melos run build:macos
+      melos run build:linux
+      melos run build:android
+      melos run build:ios
+
+  # أوامر التثبيت والنشر
+  create:installer:
+    description: Create installer package
+    run: |
+      dart melos_runner.dart run create:installer
+    select-package:
+      scope: "dev_server_app"
+
+  # أوامر GitHub
+  github:create-repo:
+    description: Create GitHub repository
+    run: |
+      cd packages/tools_package && dart lib/github_tools.dart create
+    select-package:
+      scope: "tools_package"
+
+  github:sync-config:
+    description: Sync configuration with GitHub
+    run: |
+      cd packages/tools_package && dart lib/github_tools.dart sync
+    select-package:
+      scope: "tools_package"
+
+  github:publish:
+    description: Publish release to GitHub
+    run: |
+      cd packages/tools_package && dart lib/github_tools.dart publish 1.0.0 1
+    select-package:
+      scope: "tools_package"
+
+  # أوامر الإصدار التلقائي
+  version:get:
+    description: Get current version from app-config.json
+    run: |
+      cd packages/tools_package && dart lib/github_tools.dart version
+    select-package:
+      scope: "tools_package"
+
+  version:bump:
+    description: Bump version in app-config.json
+    run: |
+      cd packages/tools_package && dart lib/github_tools.dart bump
+    select-package:
+      scope: "tools_package"
+
+  release:auto:
+    description: Automatically create, build and publish a release
+    run: |
+      cd packages/tools_package && dart lib/github_tools.dart auto 1.0.0 1
+    select-package:
+      scope: "tools_package"

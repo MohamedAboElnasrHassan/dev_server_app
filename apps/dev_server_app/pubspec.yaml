@@ -1,0 +1,64 @@
+name: dev_server_app
+description: Dev Server application with auto-update support
+version: 1.0.1+2
+publish_to: 'none'
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Local packages
+  tools_package:
+    path: ../../packages/tools_package
+  auto_update_package:
+    path: ../../packages/auto_update_package
+  core_services_package:
+    path: ../../packages/core_services_package
+
+  # UI
+  cupertino_icons: ^1.0.8
+
+  # State management and routing
+  get: ^4.7.2
+
+  # Database
+  sqflite: ^2.3.2
+  sqflite_common_ffi: ^2.3.2+1
+  path: ^1.9.0
+  path_provider: ^2.1.2
+
+  # Connectivity
+  connectivity_plus: ^5.0.2
+  url_launcher: ^6.2.5
+
+  # Storage
+  shared_preferences: ^2.2.2
+
+  # Date and time
+  intl: ^0.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  inno_bundle: ^0.2.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    # - assets/images/
+    # - assets/icons/
+    # - assets/animations/
+    - assets/data/
+
+  # fonts:
+  #   - family: Cairo
+  #     fonts:
+  #       - asset: assets/fonts/README.md
+  #   - family: Tajawal
+  #     fonts:
+  #       - asset: assets/fonts/README.md

@@ -1,0 +1,8 @@
+# melos_managed_dependency_overrides: auto_update_package,core_services_package,tools_package
+dependency_overrides:
+  auto_update_package:
+    path: ..\\..\\packages\\auto_update_package
+  core_services_package:
+    path: ..\\..\\packages\\core_services_package
+  tools_package:
+    path: ..\\..\\packages\\tools_package

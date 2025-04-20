@@ -1,7 +1,0 @@
-*.dart linguist-language=Dart
-*.yaml linguist-language=YAML
-*.json linguist-language=JSON
-*.md linguist-language=Markdown
-*.bat linguist-language=Batchfile
-*.sh linguist-language=Shell
-*.iss linguist-language=Inno Setup

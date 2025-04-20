@@ -1,0 +1,66 @@
+{
+  "app": {
+    "name": "Dev Server",
+    "id": "com.example.dev_server",
+    "version": "1.0.0",
+    "build_number": 1,
+    "author": "Mohamed Abo Elnasr Hassan",
+    "website": "https://github.com/MohamedAboElnasrHassan/dev_server"
+  },
+  "update": {
+    "latest_version": "1.0.0",
+    "latest_build_number": 1,
+    "is_required": false,
+    "min_version": "0.9.0",
+    "repository": "https://github.com/MohamedAboElnasrHassan/dev_server",
+    "check_interval_minutes": 60,
+    "change_log": "تحسينات وإصلاحات",
+    "release_date": "2023-04-19",
+    "notes_url": "https://github.com/MohamedAboElnasrHassan/dev_server/releases/tag/v{app.version}",
+    "platforms": {
+      "windows": {
+        "enabled": true,
+        "download_url": "https://github.com/MohamedAboElnasrHassan/dev_server/releases/download/v{app.version}/dev_server-v{app.version}-setup.exe",
+        "file_name": "dev_server-v{app.version}-setup.exe"
+      },
+      "macos": {
+        "enabled": true,
+        "download_url": "https://github.com/MohamedAboElnasrHassan/dev_server/releases/download/v{app.version}/dev_server-v{app.version}.dmg",
+        "file_name": "dev_server-v{app.version}.dmg"
+      },
+      "linux": {
+        "enabled": true,
+        "download_url": "https://github.com/MohamedAboElnasrHassan/dev_server/releases/download/v{app.version}/dev_server-v{app.version}.AppImage",
+        "file_name": "dev_server-v{app.version}.AppImage"
+      },
+      "android": {
+        "enabled": true,
+        "download_url": "https://github.com/MohamedAboElnasrHassan/dev_server/releases/download/v{app.version}/dev_server-v{app.version}.apk",
+        "file_name": "dev_server-v{app.version}.apk"
+      },
+      "ios": {
+        "enabled": false,
+        "download_url": "",
+        "file_name": ""
+      }
+    }
+  },
+  "repository": {
+    "owner": "MohamedAboElnasrHassan",
+    "name": "dev_server",
+    "branch": "main",
+    "base_url": "https://github.com/{repository.owner}/{repository.name}",
+    "releases_url": "{repository.base_url}/releases",
+    "download_url": "{repository.base_url}/releases/download/v{app.version}"
+  },
+  "github": {
+    "token": "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",
+    "auto_create": true,
+    "auto_push": true,
+    "auto_release": true,
+    "auto_tag": true,
+    "auto_build": true,
+    "auto_analyze": true,
+    "auto_sync": true
+  }
+}
