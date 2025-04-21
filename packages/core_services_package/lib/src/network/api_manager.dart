@@ -52,7 +52,8 @@ class ApiResponse<T> {
   }
 
   /// إنشاء استجابة خطأ
-  static ApiResponse<T> error<T>(String message, {
+  static ApiResponse<T> error<T>(
+    String message, {
     ResponseStatus status = ResponseStatus.error,
     int? statusCode,
     Map<String, dynamic>? errors,
@@ -67,9 +68,7 @@ class ApiResponse<T> {
 
   /// إنشاء استجابة تحميل
   static ApiResponse<T> loading<T>() {
-    return ApiResponse<T>(
-      status: ResponseStatus.loading,
-    );
+    return ApiResponse<T>(status: ResponseStatus.loading);
   }
 }
 
@@ -89,14 +88,11 @@ class ApiManager extends BaseService {
 
   Future<ApiManager> init() async {
     await initService();
-    
+
     // الحصول على مدير السجلات
     _logger = Get.find<Logger>();
 
-    _connect = GetConnect(
-      timeout: timeout,
-      userAgent: 'MyApp/1.0',
-    );
+    _connect = GetConnect(timeout: timeout, userAgent: 'MyApp/1.0');
 
     _connect.baseUrl = baseUrl;
 

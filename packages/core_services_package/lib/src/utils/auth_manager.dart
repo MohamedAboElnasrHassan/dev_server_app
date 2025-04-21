@@ -18,12 +18,7 @@ class BaseUserModel {
   });
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'email': email,
-      'avatar': avatar,
-    };
+    return {'id': id, 'name': name, 'email': email, 'avatar': avatar};
   }
 
   factory BaseUserModel.fromMap(Map<String, dynamic> map) {
@@ -48,14 +43,14 @@ class AuthManager extends BaseService {
 
   Future<AuthManager> init() async {
     await initService();
-    
+
     // الحصول على مدير السجلات والتخزين
     _logger = Get.find<Logger>();
     _storageManager = Get.find<StorageManager>();
-    
+
     // التحقق من حالة تسجيل الدخول
     await _checkLoginStatus();
-    
+
     return this;
   }
 
@@ -64,7 +59,7 @@ class AuthManager extends BaseService {
     try {
       final token = await _storageManager.read<String>('auth_token');
       final userData = await _storageManager.read<String>('user_data');
-      
+
       if (token != null && userData != null) {
         // تحميل بيانات المستخدم
         // يمكن استخدام readObject هنا إذا كان متاحًا
@@ -87,17 +82,17 @@ class AuthManager extends BaseService {
     try {
       authLoading.value = true;
       authError.value = '';
-      
+
       // هنا يمكن إضافة منطق تسجيل الدخول الفعلي
       // مثال: الاتصال بواجهة برمجة التطبيقات للمصادقة
-      
+
       // محاكاة تسجيل الدخول الناجح
       await Future.delayed(const Duration(seconds: 1));
-      
+
       if (email == 'test@example.com' && password == 'password') {
         // حفظ رمز المصادقة
         await _storageManager.write('auth_token', 'sample_token_123');
-        
+
         // حفظ بيانات المستخدم
         final newUser = BaseUserModel(
           id: 1,
@@ -105,13 +100,13 @@ class AuthManager extends BaseService {
           email: email,
           avatar: null,
         );
-        
+
         // يمكن استخدام writeObject هنا إذا كان متاحًا
         await _storageManager.write('user_data', newUser.toMap().toString());
-        
+
         user.value = newUser;
         isLoggedIn.value = true;
-        
+
         _logger.info('User logged in: ${newUser.email}');
         return true;
       } else {
@@ -134,10 +129,10 @@ class AuthManager extends BaseService {
       // حذف بيانات المصادقة
       await _storageManager.remove('auth_token');
       await _storageManager.remove('user_data');
-      
+
       isLoggedIn.value = false;
       user.value = null;
-      
+
       _logger.info('User logged out');
     } catch (e) {
       _logger.error('Logout error', error: e);
@@ -148,14 +143,14 @@ class AuthManager extends BaseService {
   Future<bool> validateToken() async {
     try {
       final token = await _storageManager.read<String>('auth_token');
-      
+
       if (token == null) {
         return false;
       }
-      
+
       // هنا يمكن إضافة منطق التحقق من صلاحية الرمز
       // مثال: الاتصال بواجهة برمجة التطبيقات للتحقق من صلاحية الرمز
-      
+
       // محاكاة التحقق الناجح
       return true;
     } catch (e) {

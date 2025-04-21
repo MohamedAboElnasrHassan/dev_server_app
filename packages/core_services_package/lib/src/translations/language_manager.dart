@@ -13,7 +13,7 @@ class LanguageManager extends BaseService {
 
   Future<LanguageManager> init() async {
     await initService();
-    
+
     // الحصول على مدير التخزين
     _storageManager = Get.find<StorageManager>();
 
@@ -38,7 +38,8 @@ class LanguageManager extends BaseService {
     } else {
       // استخدام اللغة الافتراضية
       final deviceLocale = Get.deviceLocale;
-      if (deviceLocale != null && isLanguageSupported(deviceLocale.languageCode)) {
+      if (deviceLocale != null &&
+          isLanguageSupported(deviceLocale.languageCode)) {
         currentLanguageCode.value = deviceLocale.languageCode;
         currentCountryCode.value = deviceLocale.countryCode ?? 'US';
         currentLocale.value = deviceLocale;

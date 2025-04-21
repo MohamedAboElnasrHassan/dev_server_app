@@ -56,7 +56,8 @@ final Map<String, String> ar = {
   'download_and_install': 'تنزيل وتثبيت',
   'skip_this_version': 'تخطي هذا الإصدار',
   'view_release_notes': 'عرض ملاحظات الإصدار',
-  'update_available_message': 'يوجد إصدار جديد من التطبيق. هل ترغب في التحديث الآن؟',
+  'update_available_message':
+      'يوجد إصدار جديد من التطبيق. هل ترغب في التحديث الآن؟',
   'update_required_message': 'هذا التحديث مطلوب لمواصلة استخدام التطبيق.',
   'no_updates': 'لا توجد تحديثات',
   'you_have_latest_version': 'أنت تستخدم أحدث إصدار من التطبيق',

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'update_manager.dart';
-import 'version_model.dart';
 
 /// صفحة التحديث
 class UpdateView extends StatefulWidget {
@@ -55,36 +54,26 @@ class _UpdateViewState extends State<UpdateView> {
   Widget build(BuildContext context) {
     final currentVersion = widget.updateManager.currentVersion.value;
     final latestVersion = widget.updateManager.latestVersion.value;
-    
+
     if (latestVersion == null) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('التحديثات'),
-        ),
-        body: const Center(
-          child: Text('لا توجد معلومات عن التحديث'),
-        ),
+        appBar: AppBar(title: const Text('التحديثات')),
+        body: const Center(child: Text('لا توجد معلومات عن التحديث')),
       );
     }
 
     final isRequired = latestVersion.required;
-    final changeLog = latestVersion.changeLog ?? 'تحديث جديد متاح';
+    // final changeLog = latestVersion.changeLog ?? 'تحديث جديد متاح';
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('تحديث جديد متاح'),
-      ),
+      appBar: AppBar(title: const Text('تحديث جديد متاح')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // أيقونة التحديث
-            const Icon(
-              Icons.system_update,
-              size: 80,
-              color: Colors.blue,
-            ),
+            const Icon(Icons.system_update, size: 80, color: Colors.blue),
             const SizedBox(height: 24),
 
             // عنوان التحديث
@@ -130,9 +119,7 @@ class _UpdateViewState extends State<UpdateView> {
             if (_isDownloading)
               Column(
                 children: [
-                  LinearProgressIndicator(
-                    value: _downloadProgress,
-                  ),
+                  LinearProgressIndicator(value: _downloadProgress),
                   const SizedBox(height: 8),
                   Text(
                     '${(_downloadProgress * 100).toStringAsFixed(0)}%',
@@ -140,7 +127,7 @@ class _UpdateViewState extends State<UpdateView> {
                   ),
                 ],
               ),
-            
+
             if (_statusMessage.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
@@ -148,20 +135,21 @@ class _UpdateViewState extends State<UpdateView> {
                   _statusMessage,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: _statusMessage.contains('خطأ') ? Colors.red : Colors.green,
+                    color:
+                        _statusMessage.contains('خطأ')
+                            ? Colors.red
+                            : Colors.green,
                   ),
                 ),
               ),
-            
+
             const SizedBox(height: 24),
 
             // أزرار الإجراءات
             if (_isDownloading)
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
-                ),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
                 child: const Text('إلغاء'),
               )
             else
@@ -214,16 +202,17 @@ class _UpdateViewState extends State<UpdateView> {
       _isDownloading = true;
       _statusMessage = '';
     });
-    
+
     try {
       final filePath = await widget.updateManager.downloadUpdate();
-      
+
       setState(() {
         _isDownloading = false;
         _downloadedFilePath = filePath;
-        _statusMessage = filePath != null
-            ? 'تم التنزيل بنجاح'
-            : 'فشل التنزيل، يرجى المحاولة مرة أخرى';
+        _statusMessage =
+            filePath != null
+                ? 'تم التنزيل بنجاح'
+                : 'فشل التنزيل، يرجى المحاولة مرة أخرى';
       });
     } catch (e) {
       setState(() {
@@ -232,24 +221,27 @@ class _UpdateViewState extends State<UpdateView> {
       });
     }
   }
-  
+
   /// تثبيت التحديث
   Future<void> _installUpdate() async {
     if (_downloadedFilePath == null) return;
-    
+
     setState(() {
       _statusMessage = 'جاري التثبيت...';
     });
-    
+
     try {
-      final success = await widget.updateManager.installUpdate(_downloadedFilePath!);
-      
+      final success = await widget.updateManager.installUpdate(
+        _downloadedFilePath!,
+      );
+
       setState(() {
-        _statusMessage = success
-            ? 'تم بدء التثبيت'
-            : 'فشل بدء التثبيت، يرجى المحاولة مرة أخرى';
+        _statusMessage =
+            success
+                ? 'تم بدء التثبيت'
+                : 'فشل بدء التثبيت، يرجى المحاولة مرة أخرى';
       });
-      
+
       if (success) {
         if (widget.onInstallComplete != null) {
           widget.onInstallComplete!();

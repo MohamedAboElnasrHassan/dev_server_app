@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:get/get.dart';
 import '../base/base_service.dart';
@@ -186,12 +185,7 @@ class DatabaseManager extends BaseService {
     List<dynamic>? whereArgs,
   }) async {
     final db = await database;
-    return await db.update(
-      table,
-      values,
-      where: where,
-      whereArgs: whereArgs,
-    );
+    return await db.update(table, values, where: where, whereArgs: whereArgs);
   }
 
   /// حذف بيانات
@@ -201,11 +195,7 @@ class DatabaseManager extends BaseService {
     List<dynamic>? whereArgs,
   }) async {
     final db = await database;
-    return await db.delete(
-      table,
-      where: where,
-      whereArgs: whereArgs,
-    );
+    return await db.delete(table, where: where, whereArgs: whereArgs);
   }
 
   /// تنفيذ استعلام SQL مخصص

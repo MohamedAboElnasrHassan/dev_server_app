@@ -133,7 +133,8 @@ class AppNotification {
       'title': title,
       'message': message,
       'time': time.toIso8601String(),
-      'color': color.value,
+      'color':
+          '${color.r.round().toRadixString(16).padLeft(2, '0')}${color.g.round().toRadixString(16).padLeft(2, '0')}${color.b.round().toRadixString(16).padLeft(2, '0')}',
       'icon': icon.codePoint,
       'isImportant': isImportant,
       'isRead': isRead,

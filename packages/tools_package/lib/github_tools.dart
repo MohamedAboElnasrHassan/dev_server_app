@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:github/github.dart';
-import 'package:path/path.dart' as path;
-import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
 
 /// الدالة الرئيسية
@@ -31,23 +29,29 @@ void main(List<String> args) async {
     case 'publish':
       if (restArgs.length < 2) {
         print('❌ Missing version or build number');
-        print('Usage: dart github_tools.dart publish <version> <build_number> [is_required]');
+        print(
+          'Usage: dart github_tools.dart publish <version> <build_number> [is_required]',
+        );
         return;
       }
       final version = restArgs[0];
       final buildNumber = restArgs[1];
-      final isRequired = restArgs.length > 2 ? restArgs[2].toLowerCase() == 'true' : false;
+      final isRequired =
+          restArgs.length > 2 ? restArgs[2].toLowerCase() == 'true' : false;
       await publishRelease(version, buildNumber, isRequired: isRequired);
       break;
     case 'auto':
       if (restArgs.length < 2) {
         print('❌ Missing version or build number');
-        print('Usage: dart github_tools.dart auto <version> <build_number> [is_required]');
+        print(
+          'Usage: dart github_tools.dart auto <version> <build_number> [is_required]',
+        );
         return;
       }
       final version = restArgs[0];
       final buildNumber = restArgs[1];
-      final isRequired = restArgs.length > 2 ? restArgs[2].toLowerCase() == 'true' : false;
+      final isRequired =
+          restArgs.length > 2 ? restArgs[2].toLowerCase() == 'true' : false;
 
       // تنفيذ جميع الخطوات تلقائياً
       await createRepository();
@@ -74,7 +78,9 @@ void printUsage() {
   print('  publish <version> <build_number> [is_required]');
   print('                         Publish a release to GitHub');
   print('  auto <version> <build_number> [is_required]');
-  print('                         Automatically create, build and publish a release');
+  print(
+    '                         Automatically create, build and publish a release',
+  );
   print('');
   print('Examples:');
   print('  dart github_tools.dart create');
@@ -162,7 +168,6 @@ Future<void> createRepository() async {
         print('⚠️ Could not create main branch: $e');
       }
     }
-
   } catch (e) {
     print('❌ Error creating repository: $e');
   }
@@ -214,8 +219,11 @@ Future<void> buildApp(String platform) async {
 
     if (platform == 'all' || platform == 'windows') {
       print('🏗️ Building for Windows...');
-      final result = await Process.run('flutter', ['build', 'windows', '--release'],
-        workingDirectory: '../../apps/dev_server_app');
+      final result = await Process.run('flutter', [
+        'build',
+        'windows',
+        '--release',
+      ], workingDirectory: '../../apps/dev_server_app');
 
       if (result.exitCode == 0) {
         print('✅ Windows build completed');
@@ -226,8 +234,11 @@ Future<void> buildApp(String platform) async {
 
     if (platform == 'all' || platform == 'macos') {
       print('🏗️ Building for macOS...');
-      final result = await Process.run('flutter', ['build', 'macos', '--release'],
-        workingDirectory: '../../apps/dev_server_app');
+      final result = await Process.run('flutter', [
+        'build',
+        'macos',
+        '--release',
+      ], workingDirectory: '../../apps/dev_server_app');
 
       if (result.exitCode == 0) {
         print('✅ macOS build completed');
@@ -238,8 +249,11 @@ Future<void> buildApp(String platform) async {
 
     if (platform == 'all' || platform == 'linux') {
       print('🏗️ Building for Linux...');
-      final result = await Process.run('flutter', ['build', 'linux', '--release'],
-        workingDirectory: '../../apps/dev_server_app');
+      final result = await Process.run('flutter', [
+        'build',
+        'linux',
+        '--release',
+      ], workingDirectory: '../../apps/dev_server_app');
 
       if (result.exitCode == 0) {
         print('✅ Linux build completed');
@@ -255,7 +269,11 @@ Future<void> buildApp(String platform) async {
 }
 
 /// إنشاء إصدار جديد
-Future<void> createRelease(String version, String buildNumber, bool isRequired) async {
+Future<void> createRelease(
+  String version,
+  String buildNumber,
+  bool isRequired,
+) async {
   try {
     print('=== 🏷️ Creating Release v$version ===');
 
@@ -318,9 +336,10 @@ Future<void> getVersion() async {
     // التحقق من وجود تحديث
     if (version != latestVersion || buildNumber != latestBuildNumber) {
       print('⚠️ Version mismatch between app and update config!');
-      print('ℹ️ Consider running `dart github_tools.dart sync` to sync versions.');
+      print(
+        'ℹ️ Consider running `dart github_tools.dart sync` to sync versions.',
+      );
     }
-
   } catch (e) {
     print('❌ Error getting version: $e');
   }
@@ -379,14 +398,17 @@ Future<void> bumpVersion() async {
 
     // تحديث ملف pubspec.yaml
     await syncConfig();
-
   } catch (e) {
     print('❌ Error bumping version: $e');
   }
 }
 
 /// نشر الإصدار على GitHub
-Future<void> publishRelease(String version, String buildNumber, {bool isRequired = false}) async {
+Future<void> publishRelease(
+  String version,
+  String buildNumber, {
+  bool isRequired = false,
+}) async {
   try {
     print('=== 📤 Publishing Release v$version to GitHub ===');
 
@@ -406,7 +428,7 @@ Future<void> publishRelease(String version, String buildNumber, {bool isRequired
     Map<String, dynamic> repoInfo;
     Map<String, dynamic> githubConfig;
     Map<String, dynamic> updateConfig;
-    Map<String, dynamic> appConfig;
+    // Map<String, dynamic> appConfig;
 
     try {
       config = json.decode(configContent);
@@ -419,7 +441,7 @@ Future<void> publishRelease(String version, String buildNumber, {bool isRequired
       print('📄 GitHub token length: ${githubConfig['token']?.length ?? 0}');
 
       updateConfig = config['update'];
-      appConfig = config['app'];
+      // appConfig = config['app'];
     } catch (e) {
       print('❌ Error parsing config file: $e');
       return;
@@ -451,9 +473,12 @@ Future<void> publishRelease(String version, String buildNumber, {bool isRequired
       if (e.toString().contains('already_exists')) {
         // الإصدار موجود بالفعل، الحصول عليه
         print('ℹ️ Release already exists, getting it...');
-        final releases = await github.repositories.listReleases(
-          RepositorySlug(repoInfo['owner'], repoInfo['name']),
-        ).toList();
+        final releases =
+            await github.repositories
+                .listReleases(
+                  RepositorySlug(repoInfo['owner'], repoInfo['name']),
+                )
+                .toList();
 
         release = releases.firstWhere(
           (r) => r.tagName == 'v$version',
@@ -476,17 +501,33 @@ Future<void> publishRelease(String version, String buildNumber, {bool isRequired
     };
 
     final platformEmojis = {
-      'windows': '💻',  // 💻
-      'macos': '🍏',   // 🍏
-      'linux': '🐧',   // 🐧
+      'windows': '💻', // 💻
+      'macos': '🍏', // 🍏
+      'linux': '🐧', // 🐧
     };
 
     // رفع ملف التثبيت من مجلد installer
     final installerFileName = 'dev_server-v$version-setup.exe';
-    final installerPath = '../../apps/dev_server_app/build/installer/$installerFileName';
-    final installerFile = File(installerPath);
 
-    print('🔍 Looking for installer file at: $installerPath');
+    // التحقق من وجود ملف التثبيت في مجلد app_build أولاً
+    final newInstallerPath = '../../app_build/installer/$installerFileName';
+    final legacyInstallerPath = '../../apps/dev_server_app/build/installer/$installerFileName';
+
+    final newInstallerFile = File(newInstallerPath);
+    final legacyInstallerFile = File(legacyInstallerPath);
+
+    File installerFile;
+    String installerPath;
+
+    if (await newInstallerFile.exists()) {
+      installerFile = newInstallerFile;
+      installerPath = newInstallerPath;
+      print('🔍 Found installer file in app_build directory: $newInstallerPath');
+    } else {
+      installerFile = legacyInstallerFile;
+      installerPath = legacyInstallerPath;
+      print('🔍 Looking for installer file in legacy directory: $legacyInstallerPath');
+    }
 
     try {
       // التحقق من وجود ملف التثبيت
@@ -510,11 +551,15 @@ Future<void> publishRelease(String version, String buildNumber, {bool isRequired
         if (response.statusCode >= 200 && response.statusCode < 300) {
           print('✅ Uploaded installer successfully');
         } else {
-          print('❌ Failed to upload installer: ${response.statusCode} ${response.body}');
+          print(
+            '❌ Failed to upload installer: ${response.statusCode} ${response.body}',
+          );
         }
       } else {
         print('ℹ️ Installer file not found: $installerPath');
-        print('ℹ️ You can create it with: dart melos_runner.dart run create:installer');
+        print(
+          'ℹ️ You can create it with: dart melos_runner.dart run create:installer',
+        );
       }
     } catch (e) {
       print('❌ Failed to upload installer: $e');
@@ -528,11 +573,14 @@ Future<void> publishRelease(String version, String buildNumber, {bool isRequired
       // تحديد مسار الملف
       String filePath;
       if (platform == 'windows') {
-        filePath = '../../apps/dev_server_app/build/windows/runner/Release/$fileName';
+        filePath =
+            '../../apps/dev_server_app/build/windows/runner/Release/$fileName';
       } else if (platform == 'macos') {
-        filePath = '../../apps/dev_server_app/build/macos/Build/Products/Release/$fileName';
+        filePath =
+            '../../apps/dev_server_app/build/macos/Build/Products/Release/$fileName';
       } else if (platform == 'linux') {
-        filePath = '../../apps/dev_server_app/build/linux/x64/release/bundle/$fileName';
+        filePath =
+            '../../apps/dev_server_app/build/linux/x64/release/bundle/$fileName';
       } else {
         continue;
       }
@@ -543,7 +591,9 @@ Future<void> publishRelease(String version, String buildNumber, {bool isRequired
         // التحقق من وجود الملف
         if (await file.exists()) {
           final fileSize = await file.length();
-          print('${platformEmojis[platform] ?? '📤'} Uploading $fileName ($fileSize bytes)');
+          print(
+            '${platformEmojis[platform] ?? '📤'} Uploading $fileName ($fileSize bytes)',
+          );
 
           // رفع الملف
           final bytes = await file.readAsBytes();
@@ -561,7 +611,9 @@ Future<void> publishRelease(String version, String buildNumber, {bool isRequired
           if (response.statusCode >= 200 && response.statusCode < 300) {
             print('✅ Uploaded $fileName');
           } else {
-            print('❌ Failed to upload $fileName: ${response.statusCode} ${response.body}');
+            print(
+              '❌ Failed to upload $fileName: ${response.statusCode} ${response.body}',
+            );
           }
         } else {
           print('❌ File not found: ${file.path}');
@@ -588,10 +640,13 @@ Future<void> publishRelease(String version, String buildNumber, {bool isRequired
           body: configBytes,
         );
 
-        if (configResponse.statusCode >= 200 && configResponse.statusCode < 300) {
+        if (configResponse.statusCode >= 200 &&
+            configResponse.statusCode < 300) {
           print('✅ Uploaded app-config.json');
         } else {
-          print('❌ Failed to upload app-config.json: ${configResponse.statusCode} ${configResponse.body}');
+          print(
+            '❌ Failed to upload app-config.json: ${configResponse.statusCode} ${configResponse.body}',
+          );
         }
       }
     } catch (e) {

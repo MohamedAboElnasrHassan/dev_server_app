@@ -22,7 +22,11 @@ class VersionInfo {
     this.buildNumber = 1,
     this.required = false,
     this.minVersion,
-    this.repository = const {'owner': 'Mohamed', 'name': 'dev_server', 'branch': 'main'},
+    this.repository = const {
+      'owner': 'Mohamed',
+      'name': 'dev_server',
+      'branch': 'main',
+    },
     required this.assets,
     this.notesUrl,
     this.changeLog,
@@ -51,7 +55,9 @@ class VersionInfo {
     // تحويل update_settings
     final Map<String, dynamic>? updateSettings;
     if (json['update_settings'] != null && json['update_settings'] is Map) {
-      updateSettings = Map<String, dynamic>.from(json['update_settings'] as Map);
+      updateSettings = Map<String, dynamic>.from(
+        json['update_settings'] as Map,
+      );
     } else {
       updateSettings = null;
     }

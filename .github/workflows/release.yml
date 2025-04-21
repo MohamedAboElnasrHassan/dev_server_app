@@ -1,0 +1,61 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # تشغيل العملية عند دفع تاج يبدأ بـ v مثل v1.0.0
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # للحصول على جميع التاجات والتاريخ
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.0'
+          channel: 'stable'
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 'stable'
+
+      - name: Install Melos
+        run: dart pub global activate melos
+
+      - name: Install dependencies
+        run: |
+          dart pub global run melos bootstrap
+          cd apps/dev_server_app && flutter pub get
+
+      - name: Build Windows App
+        run: |
+          cd apps/dev_server_app
+          flutter build windows --release
+
+      - name: Install Inno Setup
+        run: |
+          choco install innosetup -y
+
+      - name: Create Installer
+        run: |
+          mkdir -p app_build/installer
+          iscc /Q apps/dev_server_app/installer/setup_script.iss
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          files: |
+            app_build/installer/dev_server-v1.0.0-setup.exe
+            apps/dev_server_app/build/windows/x64/runner/Release/dev_server_app.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

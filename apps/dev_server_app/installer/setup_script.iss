@@ -16,7 +16,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
-OutputDir=..\build\installer
+OutputDir=..\..\..\app_build\installer
 OutputBaseFilename=dev_server-v{#MyAppVersion}-setup
 Compression=lzma
 SolidCompression=yes
@@ -28,15 +28,20 @@ ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
-Name: "arabic"; MessagesFile: "compiler:Languages\Arabic.isl"
+; Name: "arabic"; MessagesFile: "compiler:Languages\Arabic.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 6.1; Check: not IsAdminInstallMode
 
 [Files]
-Source: "..\build\windows\x64\runner\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\build\windows\x64\runner\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+; Try to use files from app_build directory first
+Source: "..\..\..\app_build\windows\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: FileExists('..\..\..\app_build\windows\{#MyAppExeName}')
+Source: "..\..\..\app_build\windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: FileExists('..\..\..\app_build\windows\{#MyAppExeName}')
+
+; Fallback to original build directory if app_build doesn't exist
+Source: "..\build\windows\x64\runner\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: not FileExists('..\..\..\app_build\windows\{#MyAppExeName}')
+Source: "..\build\windows\x64\runner\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: not FileExists('..\..\..\app_build\windows\{#MyAppExeName}')
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

@@ -27,9 +27,10 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final cardColor = backgroundColor ?? 
+    final cardColor =
+        backgroundColor ??
         (isDarkMode ? Theme.of(context).cardColor : Colors.white);
-    
+
     final cardElevation = elevation ?? (hasShadow ? 2.0 : 0.0);
 
     if (onTap != null) {
@@ -48,10 +49,7 @@ class CustomCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(borderRadius),
                 border: border,
               ),
-              child: Padding(
-                padding: padding,
-                child: child,
-              ),
+              child: Padding(padding: padding, child: child),
             ),
           ),
         ),

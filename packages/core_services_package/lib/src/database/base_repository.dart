@@ -12,11 +12,7 @@ abstract class BaseRepository<T> {
   T fromMap(Map<String, dynamic> map);
 
   /// الحصول على قائمة من الكيانات
-  Future<List<T>> getAll({
-    String? orderBy,
-    int? limit,
-    int? offset,
-  }) async {
+  Future<List<T>> getAll({String? orderBy, int? limit, int? offset}) async {
     final maps = await _databaseManager.query(
       tableName,
       orderBy: orderBy,
@@ -42,7 +38,9 @@ abstract class BaseRepository<T> {
 
   /// البحث عن كيانات
   Future<List<T>> search(String query, List<String> searchFields) async {
-    final whereConditions = searchFields.map((field) => '$field LIKE ?').join(' OR ');
+    final whereConditions = searchFields
+        .map((field) => '$field LIKE ?')
+        .join(' OR ');
     final whereArgs = List.filled(searchFields.length, '%$query%');
 
     final maps = await _databaseManager.query(
@@ -80,7 +78,9 @@ abstract class BaseRepository<T> {
 
   /// الحصول على عدد الكيانات
   Future<int> count() async {
-    final result = await _databaseManager.rawQuery('SELECT COUNT(*) as count FROM $tableName');
+    final result = await _databaseManager.rawQuery(
+      'SELECT COUNT(*) as count FROM $tableName',
+    );
     return result.first['count'] as int;
   }
 

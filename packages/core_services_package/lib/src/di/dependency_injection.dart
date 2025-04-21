@@ -31,13 +31,14 @@ class DependencyInjection {
     Get.put(connectivityManager, permanent: true);
 
     // الشبكة
-    final apiManager = await ApiManager(
-      baseUrl: 'https://api.example.com',
-      defaultHeaders: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-    ).init();
+    final apiManager =
+        await ApiManager(
+          baseUrl: 'https://api.example.com',
+          defaultHeaders: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ).init();
     Get.put(apiManager, permanent: true);
 
     // الإعدادات

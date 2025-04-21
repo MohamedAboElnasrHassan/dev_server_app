@@ -56,7 +56,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   final UpdateManager updateManager;
 
-  const MyApp({Key? key, required this.updateManager}) : super(key: key);
+  const MyApp({super.key, required this.updateManager});
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,7 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatefulWidget {
   final UpdateManager updateManager;
 
-  const HomePage({Key? key, required this.updateManager}) : super(key: key);
+  const HomePage({super.key, required this.updateManager});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -107,10 +107,11 @@ class _HomePageState extends State<HomePage> {
       showDialog(
         context: context,
         barrierDismissible: !widget.updateManager.updateRequired.value,
-        builder: (context) => UpdateDialog(
-          updateManager: widget.updateManager,
-          updateInfo: widget.updateManager.latestVersion.value!,
-        ),
+        builder:
+            (context) => UpdateDialog(
+              updateManager: widget.updateManager,
+              updateInfo: widget.updateManager.latestVersion.value!,
+            ),
       );
     }
   }
@@ -127,7 +128,9 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SettingsPage(updateManager: widget.updateManager),
+                  builder:
+                      (context) =>
+                          SettingsPage(updateManager: widget.updateManager),
                 ),
               );
             },
@@ -148,7 +151,10 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     const Text(
                       'مرحباً بك في تطبيق Dev Server',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
@@ -179,7 +185,10 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     const Text(
                       'التحديثات',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     ValueListenableBuilder<bool>(
@@ -188,7 +197,9 @@ class _HomePageState extends State<HomePage> {
                         return Row(
                           children: [
                             Icon(
-                              available ? Icons.system_update : Icons.check_circle,
+                              available
+                                  ? Icons.system_update
+                                  : Icons.check_circle,
                               color: available ? Colors.orange : Colors.green,
                             ),
                             const SizedBox(width: 8),
@@ -227,7 +238,9 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SettingsPage(updateManager: widget.updateManager),
+                      builder:
+                          (context) =>
+                              SettingsPage(updateManager: widget.updateManager),
                     ),
                   );
                 },
@@ -256,7 +269,9 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AboutPage(updateManager: widget.updateManager),
+                      builder:
+                          (context) =>
+                              AboutPage(updateManager: widget.updateManager),
                     ),
                   );
                 },

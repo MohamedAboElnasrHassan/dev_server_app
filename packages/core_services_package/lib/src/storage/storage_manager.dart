@@ -13,10 +13,10 @@ class StorageManager extends BaseService {
 
   Future<StorageManager> init() async {
     await initService();
-    
+
     // الحصول على مدير قاعدة البيانات
     _databaseManager = Get.find<DatabaseManager>();
-    
+
     return this;
   }
 
@@ -131,7 +131,10 @@ class StorageManager extends BaseService {
   }
 
   /// قراءة كائن من سلسلة JSON
-  Future<T?> readObject<T>(String key, T Function(Map<String, dynamic> json) fromJson) async {
+  Future<T?> readObject<T>(
+    String key,
+    T Function(Map<String, dynamic> json) fromJson,
+  ) async {
     final jsonString = await read<String>(key);
     if (jsonString == null) return null;
 
@@ -145,21 +148,29 @@ class StorageManager extends BaseService {
   }
 
   /// قراءة قائمة من الكائنات من سلسلة JSON
-  Future<List<T>?> readList<T>(String key, T Function(Map<String, dynamic> json) fromJson) async {
+  Future<List<T>?> readList<T>(
+    String key,
+    T Function(Map<String, dynamic> json) fromJson,
+  ) async {
     final jsonString = await read<String>(key);
     if (jsonString == null) return null;
 
     try {
       // تحويل السلسلة إلى List
       final List<dynamic> data = jsonDecode(jsonString);
-      return data.map((item) => fromJson(item as Map<String, dynamic>)).toList();
+      return data
+          .map((item) => fromJson(item as Map<String, dynamic>))
+          .toList();
     } catch (e) {
       return null;
     }
   }
 
   /// مراقبة التغييرات على مفتاح
-  StreamSubscription<dynamic> listenKey(String key, Function(dynamic) callback) {
+  StreamSubscription<dynamic> listenKey(
+    String key,
+    Function(dynamic) callback,
+  ) {
     // إنشاء متحكم للبث
     final controller = StreamController<dynamic>();
 

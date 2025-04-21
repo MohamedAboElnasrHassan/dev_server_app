@@ -13,7 +13,7 @@ class NavigationManager extends BaseService {
 
   Future<NavigationManager> init() async {
     await initService();
-    
+
     // الحصول على مدير السجلات
     _logger = Get.find<Logger>();
 

@@ -16,7 +16,8 @@ abstract class BaseController extends GetxController {
 
   void clearError() => errorMessage.value = '';
 
-  Future<T?> runAsync<T>(Future<T> Function() asyncFunction, {
+  Future<T?> runAsync<T>(
+    Future<T> Function() asyncFunction, {
     bool showLoading = true,
     bool showError = true,
   }) async {

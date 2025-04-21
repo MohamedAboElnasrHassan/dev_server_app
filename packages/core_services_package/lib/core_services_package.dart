@@ -47,9 +47,7 @@ export 'src/forms/form_manager.dart';
 // Notifications
 export 'src/notifications/notification_manager.dart';
 
-// Updates
-export 'src/updates/update_manager.dart';
-export 'src/updates/version_model.dart';
+// Updates - Removed to avoid duplication with auto_update_package
 
 // Values
 export 'src/values/app_colors.dart';

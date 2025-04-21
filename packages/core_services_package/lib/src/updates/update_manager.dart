@@ -39,7 +39,7 @@ class UpdateManager extends BaseService {
 
   Future<UpdateManager> init() async {
     await initService();
-    
+
     // الحصول على مدير السجلات والتخزين
     _logger = Get.find<Logger>();
     _storageManager = Get.find<StorageManager>();
@@ -53,7 +53,9 @@ class UpdateManager extends BaseService {
   /// تحميل إعدادات التحديث
   Future<void> _loadSettings() async {
     // تحميل إعدادات التحديث
-    final enableChecks = await _storageManager.read<bool>(_enableUpdateChecksKey);
+    final enableChecks = await _storageManager.read<bool>(
+      _enableUpdateChecksKey,
+    );
     if (enableChecks != null) {
       _enableUpdateChecks = enableChecks;
     }
@@ -98,7 +100,10 @@ class UpdateManager extends BaseService {
       }
 
       // تحديث تاريخ آخر فحص
-      await _storageManager.write(_lastCheckKey, DateTime.now().toIso8601String());
+      await _storageManager.write(
+        _lastCheckKey,
+        DateTime.now().toIso8601String(),
+      );
 
       // الحصول على معلومات التحديث
       final response = await _dio.get(_updateConfigUrl);
@@ -114,19 +119,25 @@ class UpdateManager extends BaseService {
         latestVersion.value = versionInfo;
 
         // التحقق مما إذا كان الإصدار الحالي يلبي الحد الأدنى المطلوب
-        final meetsMinRequirement = versionInfo.meetsMinimumRequirement(currentVersion.value);
+        final meetsMinRequirement = versionInfo.meetsMinimumRequirement(
+          currentVersion.value,
+        );
 
         // التحقق مما إذا كان هناك إصدار أحدث
         final isNewer = versionInfo.isNewerThan(currentVersion.value);
 
         // التحقق مما إذا كان المستخدم قد تخطى هذا الإصدار
-        final skippedVersion = await _storageManager.read<String>(_skipVersionKey);
+        final skippedVersion = await _storageManager.read<String>(
+          _skipVersionKey,
+        );
         final isSkipped = skippedVersion == versionInfo.version;
 
         updateAvailable.value = isNewer && !isSkipped;
         updateRequired.value = versionInfo.required && !meetsMinRequirement;
 
-        _logger.info('Update check completed. Available: ${updateAvailable.value}, Required: ${updateRequired.value}');
+        _logger.info(
+          'Update check completed. Available: ${updateAvailable.value}, Required: ${updateRequired.value}',
+        );
 
         isCheckingForUpdates.value = false;
         return updateAvailable.value;
@@ -145,7 +156,10 @@ class UpdateManager extends BaseService {
   /// تخطي الإصدار الحالي
   Future<void> skipCurrentVersion() async {
     if (latestVersion.value != null) {
-      await _storageManager.write(_skipVersionKey, latestVersion.value!.version);
+      await _storageManager.write(
+        _skipVersionKey,
+        latestVersion.value!.version,
+      );
       updateAvailable.value = false;
     }
   }

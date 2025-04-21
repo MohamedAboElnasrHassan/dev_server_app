@@ -41,20 +41,21 @@ class UpdateManager {
     required Function(String) logInfo,
     required Function(String, {dynamic error}) logError,
     bool enableUpdateChecks = true,
-  }) :
-    _configUrl = configUrl,
-    _readStorage = readStorage,
-    _writeStorage = writeStorage,
-    _logInfo = logInfo,
-    _logError = logError,
-    _enableUpdateChecks = enableUpdateChecks;
+  }) : _configUrl = configUrl,
+       _readStorage = readStorage,
+       _writeStorage = writeStorage,
+       _logInfo = logInfo,
+       _logError = logError,
+       _enableUpdateChecks = enableUpdateChecks;
 
   Future<void> init() async {
     // الحصول على معلومات الإصدار الحالي
     final packageInfo = await PackageInfo.fromPlatform();
     currentVersion.value = packageInfo.version;
 
-    _logInfo('Update manager initialized. Current version: ${currentVersion.value}');
+    _logInfo(
+      'Update manager initialized. Current version: ${currentVersion.value}',
+    );
   }
 
   /// Check for updates
@@ -143,16 +144,18 @@ class UpdateManager {
         'notes_url': updateData['notes_url'],
         'change_log': updateData['change_log'],
         'release_date': updateData['release_date'],
-        'assets': updateData['assets']
+        'assets': updateData['assets'],
       };
 
       // استبدال المتغيرات في الروابط
       final String appName = appData['name'] ?? 'Dev Server';
-      final String appNameFormatted = appName.replaceAll(' ', '_').toLowerCase();
+      final String appNameFormatted =
+          appName.replaceAll(' ', '_').toLowerCase();
       final String version = appData['version'];
 
       if (updateInfo['notes_url'] is String) {
-        updateInfo['notes_url'] = updateInfo['notes_url'].toString()
+        updateInfo['notes_url'] = updateInfo['notes_url']
+            .toString()
             .replaceAll('{version}', version)
             .replaceAll('{app_name}', appNameFormatted);
       }
@@ -172,7 +175,9 @@ class UpdateManager {
       latestVersion.value = versionInfo;
 
       // التحقق مما إذا كان الإصدار الحالي يلبي الحد الأدنى المطلوب
-      final meetsMinRequirement = versionInfo.meetsMinimumRequirement(currentVersion.value);
+      final meetsMinRequirement = versionInfo.meetsMinimumRequirement(
+        currentVersion.value,
+      );
 
       // التحقق مما إذا كان هناك إصدار أحدث
       final isNewer = versionInfo.isNewerThan(currentVersion.value);
@@ -184,7 +189,9 @@ class UpdateManager {
       updateAvailable.value = isNewer && !isSkipped;
       updateRequired.value = versionInfo.required && !meetsMinRequirement;
 
-      _logInfo('Update check completed. Current version: ${currentVersion.value}, Latest version: ${versionInfo.version}, Available: ${updateAvailable.value}, Required: ${updateRequired.value}');
+      _logInfo(
+        'Update check completed. Current version: ${currentVersion.value}, Latest version: ${versionInfo.version}, Available: ${updateAvailable.value}, Required: ${updateRequired.value}',
+      );
 
       isCheckingForUpdates.value = false;
       return updateAvailable.value;

@@ -51,6 +51,11 @@ scripts:
       git clean -x -d -f -q
       melos exec -- "flutter clean"
 
+  clean:build:
+    description: Clean build directories (app_build and build folders)
+    run: |
+      dart melos_runner.dart clean
+
   test:
     description: Run tests in all packages
     run: melos exec -- "flutter test"
@@ -107,6 +112,9 @@ scripts:
   create:installer:
     description: Create installer package
     run: |
+      echo "💾 Creating installer package..."
+
+      # Use dart script to create installer
       dart melos_runner.dart run create:installer
     select-package:
       scope: "dev_server_app"
@@ -151,6 +159,25 @@ scripts:
   release:auto:
     description: Automatically create, build and publish a release
     run: |
+      # Step 1: Build Windows app
+      echo "🚀 Step 1/3: Building Windows application..."
+      melos run build:windows
+
+      # Step 2: Create installer
+      echo "💾 Step 2/3: Creating installer package..."
+      melos run create:installer
+
+      # Step 3: Publish to GitHub
+      echo "🔖 Step 3/3: Publishing release to GitHub..."
       cd packages/tools_package && dart lib/github_tools.dart auto 1.0.0 1
+
+  release:tag:
+    description: Create and push a new version tag
+    run: |
+      VERSION=$(cd packages/tools_package && dart lib/github_tools.dart version | grep -oP 'Version: \K[\d\.]+' || echo "1.0.0")
+      echo "Creating tag v$VERSION"
+      git tag -a "v$VERSION" -m "Release v$VERSION"
+      git push origin "v$VERSION"
+      echo "✅ Tag v$VERSION created and pushed. GitHub Actions will now build and release automatically."
     select-package:
       scope: "tools_package"

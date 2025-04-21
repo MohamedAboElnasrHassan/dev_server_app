@@ -2,14 +2,14 @@
   "app": {
     "name": "Dev Server",
     "id": "com.mohamedaboelnasrhassan.dev_server",
-    "version": "1.0.1",
-    "build_number": 2,
+    "version": "1.0.2",
+    "build_number": 3,
     "author": "Mohamed Abo Elnasr Hassan",
-    "website": "https://github.com/MohamedAboElnasrHassan/dev_server"
+    "website": "https://github.com/MohamedAboElnasrHassan/dev_server_app"
   },
   "repository": {
     "owner": "MohamedAboElnasrHassan",
-    "name": "dev_server",
+    "name": "dev_server_app",
     "branch": "main",
     "base_url": "https://github.com/{repository.owner}/{repository.name}",
     "releases_url": "{repository.base_url}/releases",
@@ -26,32 +26,32 @@
     "auto_sync": true
   },
   "update": {
-    "latest_version": "1.0.1",
-    "latest_build_number": 2,
+    "latest_version": "1.0.2",
+    "latest_build_number": 3,
     "is_required": false,
-    "repository": "https://github.com/MohamedAboElnasrHassan/dev_server",
+    "repository": "https://github.com/MohamedAboElnasrHassan/dev_server_app",
     "check_interval_minutes": 60,
     "change_log": "الإصدار الأول من تطبيق Dev Server مع دعم التحديث التلقائي وتكامل مع GitHub",
     "release_date": "2023-04-19",
     "platforms": {
       "windows": {
         "enabled": true,
-        "download_url": "https://github.com/MohamedAboElnasrHassan/dev_server/releases/download/v{app.version}/dev_server-v{app.version}-setup.exe",
+        "download_url": "https://github.com/MohamedAboElnasrHassan/dev_server_app/releases/download/v{app.version}/dev_server-v{app.version}-setup.exe",
         "file_name": "dev_server-v{app.version}-setup.exe"
       },
       "macos": {
         "enabled": true,
-        "download_url": "https://github.com/MohamedAboElnasrHassan/dev_server/releases/download/v{app.version}/dev_server-v{app.version}.dmg",
+        "download_url": "https://github.com/MohamedAboElnasrHassan/dev_server_app/releases/download/v{app.version}/dev_server-v{app.version}.dmg",
         "file_name": "dev_server-v{app.version}.dmg"
       },
       "linux": {
         "enabled": true,
-        "download_url": "https://github.com/MohamedAboElnasrHassan/dev_server/releases/download/v{app.version}/dev_server-v{app.version}.AppImage",
+        "download_url": "https://github.com/MohamedAboElnasrHassan/dev_server_app/releases/download/v{app.version}/dev_server-v{app.version}.AppImage",
         "file_name": "dev_server-v{app.version}.AppImage"
       },
       "android": {
         "enabled": true,
-        "download_url": "https://github.com/MohamedAboElnasrHassan/dev_server/releases/download/v{app.version}/dev_server-v{app.version}.apk",
+        "download_url": "https://github.com/MohamedAboElnasrHassan/dev_server_app/releases/download/v{app.version}/dev_server-v{app.version}.apk",
         "file_name": "dev_server-v{app.version}.apk"
       },
       "ios": {

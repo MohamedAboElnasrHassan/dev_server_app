@@ -38,14 +38,16 @@ class CustomButton extends StatelessWidget {
 
     switch (type) {
       case ButtonType.primary:
-        backgroundColor = isDarkMode ? AppColors.darkPrimary : AppColors.lightPrimary;
+        backgroundColor =
+            isDarkMode ? AppColors.darkPrimary : AppColors.lightPrimary;
         textColor = Colors.white;
         borderColor = backgroundColor;
         break;
       case ButtonType.secondary:
         backgroundColor = Colors.transparent;
         textColor = isDarkMode ? AppColors.darkPrimary : AppColors.lightPrimary;
-        borderColor = isDarkMode ? AppColors.darkPrimary : AppColors.lightPrimary;
+        borderColor =
+            isDarkMode ? AppColors.darkPrimary : AppColors.lightPrimary;
         break;
       case ButtonType.text:
         backgroundColor = Colors.transparent;

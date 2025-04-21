@@ -15,10 +15,10 @@ class ServiceInitializer {
   /// تهيئة جميع الخدمات
   static Future<void> init() async {
     // تهيئة السجل
-    await Get.putAsync(() => Logger(
-      enableConsoleOutput: true,
-      enableFileOutput: false,
-    ).init(), permanent: true);
+    await Get.putAsync(
+      () => Logger(enableConsoleOutput: true, enableFileOutput: false).init(),
+      permanent: true,
+    );
 
     final logger = Get.find<Logger>();
     logger.info('Initializing services...');
@@ -38,13 +38,17 @@ class ServiceInitializer {
     logger.info('Connectivity initialized');
 
     // تهيئة الشبكة
-    await Get.putAsync(() => ApiManager(
-      baseUrl: 'https://api.example.com',
-      defaultHeaders: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-    ).init(), permanent: true);
+    await Get.putAsync(
+      () =>
+          ApiManager(
+            baseUrl: 'https://api.example.com',
+            defaultHeaders: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+          ).init(),
+      permanent: true,
+    );
     logger.info('API initialized');
 
     // تهيئة الإعدادات

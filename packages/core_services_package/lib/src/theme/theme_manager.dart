@@ -101,21 +101,28 @@ class ThemeManager extends BaseService {
   /// تعيين الموضوع
   void setTheme(ThemeMode mode) {
     currentTheme.value = mode;
-    isDarkMode.value = mode == ThemeMode.dark ||
-                       (mode == ThemeMode.system && Get.isPlatformDarkMode);
+    isDarkMode.value =
+        mode == ThemeMode.dark ||
+        (mode == ThemeMode.system && Get.isPlatformDarkMode);
   }
 
   /// تعيين اللون الأساسي
   void setPrimaryColor(Color color) {
     primaryColor.value = color;
-    _storageManager.write('primary_color', color.value);
+    _storageManager.write(
+      'primary_color',
+      '${color.r.round().toRadixString(16).padLeft(2, '0')}${color.g.round().toRadixString(16).padLeft(2, '0')}${color.b.round().toRadixString(16).padLeft(2, '0')}',
+    );
     _updateTheme();
   }
 
   /// تعيين لون التأكيد
   void setAccentColor(Color color) {
     accentColor.value = color;
-    _storageManager.write('accent_color', color.value);
+    _storageManager.write(
+      'accent_color',
+      '${color.r.round().toRadixString(16).padLeft(2, '0')}${color.g.round().toRadixString(16).padLeft(2, '0')}${color.b.round().toRadixString(16).padLeft(2, '0')}',
+    );
     _updateTheme();
   }
 

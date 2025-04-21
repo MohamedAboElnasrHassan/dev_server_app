@@ -10,9 +10,7 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('حول التطبيق'),
-      ),
+      appBar: AppBar(title: const Text('حول التطبيق')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -29,7 +27,10 @@ class AboutPage extends StatelessWidget {
                     const Center(
                       child: Text(
                         'Dev Server',
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -54,9 +55,9 @@ class AboutPage extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // معلومات المطور
             Card(
               elevation: 4,
@@ -67,35 +68,46 @@ class AboutPage extends StatelessWidget {
                   children: [
                     const Text(
                       'المطور',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     const Text('Mohamed Abo Elnasr Hassan'),
                     const SizedBox(height: 16),
                     const Text(
                       'الموقع الإلكتروني',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     InkWell(
                       onTap: () async {
-                        final url = Uri.parse('https://github.com/MohamedAboElnasrHassan/dev_server');
+                        final url = Uri.parse(
+                          'https://github.com/MohamedAboElnasrHassan/dev_server',
+                        );
                         if (await canLaunchUrl(url)) {
                           await launchUrl(url);
                         }
                       },
                       child: const Text(
                         'https://github.com/MohamedAboElnasrHassan/dev_server',
-                        style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                        style: TextStyle(
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // معلومات الترخيص
             Card(
               elevation: 4,
@@ -106,7 +118,10 @@ class AboutPage extends StatelessWidget {
                   children: const [
                     Text(
                       'الترخيص',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(height: 8),
                     Text('جميع الحقوق محفوظة © 2023'),

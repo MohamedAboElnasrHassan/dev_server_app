@@ -15,7 +15,7 @@ class ConnectivityManager extends BaseService {
 
   Future<ConnectivityManager> init() async {
     await initService();
-    
+
     // الحصول على مدير السجلات
     _logger = Get.find<Logger>();
 
@@ -23,7 +23,9 @@ class ConnectivityManager extends BaseService {
     await _checkConnectivity();
 
     // الاستماع للتغييرات في حالة الاتصال
-    _subscription = _connectivity.onConnectivityChanged.listen(_updateConnectivity);
+    _subscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectivity,
+    );
 
     return this;
   }
@@ -45,7 +47,9 @@ class ConnectivityManager extends BaseService {
     connectionType.value = result;
     isConnected.value = result != ConnectivityResult.none;
 
-    _logger.info('Connectivity changed: $result, Connected: ${isConnected.value}');
+    _logger.info(
+      'Connectivity changed: $result, Connected: ${isConnected.value}',
+    );
   }
 
   /// الحصول على نوع الاتصال الحالي

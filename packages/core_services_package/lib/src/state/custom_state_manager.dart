@@ -52,10 +52,7 @@ class CustomStateManager<T> {
   }
 
   /// استدعاء دالة بعد فترة من الزمن من آخر تغيير
-  WorkerCallback debounce(
-    void Function(T state) callback, {
-    Duration? time,
-  }) {
+  WorkerCallback debounce(void Function(T state) callback, {Duration? time}) {
     final duration = time ?? const Duration(milliseconds: 800);
     Timer? timer;
 
@@ -66,10 +63,7 @@ class CustomStateManager<T> {
   }
 
   /// استدعاء دالة على فترات زمنية منتظمة
-  WorkerCallback interval(
-    void Function(T state) callback, {
-    Duration? time,
-  }) {
+  WorkerCallback interval(void Function(T state) callback, {Duration? time}) {
     final duration = time ?? const Duration(milliseconds: 400);
     Timer? timer;
     late StreamSubscription<T> subscription;

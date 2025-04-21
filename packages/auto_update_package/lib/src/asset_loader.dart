@@ -8,10 +8,10 @@ class AssetLoader {
     try {
       // تحميل الملف كنص
       final jsonString = await rootBundle.loadString(assetPath);
-      
+
       // تحويل النص إلى كائن JSON
       final jsonData = json.decode(jsonString) as Map<String, dynamic>;
-      
+
       return jsonData;
     } catch (e) {
       throw Exception('Error loading asset: $assetPath - $e');

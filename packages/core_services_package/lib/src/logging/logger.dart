@@ -4,13 +4,7 @@ import 'package:flutter/foundation.dart';
 import '../base/base_service.dart';
 
 /// مستويات السجل
-enum LogLevel {
-  debug,
-  info,
-  warning,
-  error,
-  fatal,
-}
+enum LogLevel { debug, info, warning, error, fatal }
 
 /// مدير السجلات
 class Logger extends BaseService {
@@ -66,7 +60,12 @@ class Logger extends BaseService {
   }
 
   /// تسجيل رسالة خطأ
-  void error(String message, {String? tag, Object? error, StackTrace? stackTrace}) {
+  void error(
+    String message, {
+    String? tag,
+    Object? error,
+    StackTrace? stackTrace,
+  }) {
     if (minLevel.index <= LogLevel.error.index) {
       String logMessage = message;
       if (error != null) {
@@ -80,7 +79,12 @@ class Logger extends BaseService {
   }
 
   /// تسجيل رسالة خطأ فادح
-  void fatal(String message, {String? tag, Object? error, StackTrace? stackTrace}) {
+  void fatal(
+    String message, {
+    String? tag,
+    Object? error,
+    StackTrace? stackTrace,
+  }) {
     if (minLevel.index <= LogLevel.fatal.index) {
       String logMessage = message;
       if (error != null) {

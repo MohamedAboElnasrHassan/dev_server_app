@@ -5,21 +5,22 @@ class FormManager {
   final Map<String, Rx<FormField>> _fields = {};
   final isValid = false.obs;
   final isDirty = false.obs;
-  
+
   /// تسجيل حقل جديد في النموذج
   void registerField(
     String name, {
     dynamic initialValue,
     List<FormValidator>? validators,
   }) {
-    _fields[name] = FormField(
-      name: name,
-      value: initialValue,
-      validators: validators ?? [],
-    ).obs;
+    _fields[name] =
+        FormField(
+          name: name,
+          value: initialValue,
+          validators: validators ?? [],
+        ).obs;
     _validateForm();
   }
-  
+
   /// تعيين قيمة لحقل
   void setValue(String name, dynamic value) {
     if (_fields.containsKey(name)) {
@@ -28,32 +29,32 @@ class FormManager {
       field.isDirty = true;
       field.validate();
       _fields[name]!.refresh();
-      
+
       isDirty.value = true;
       _validateForm();
     }
   }
-  
+
   /// الحصول على قيمة حقل
   dynamic getValue(String name) {
     return _fields[name]?.value.value;
   }
-  
+
   /// الحصول على خطأ حقل
   String? getError(String name) {
     return _fields[name]?.value.error;
   }
-  
+
   /// التحقق من صحة حقل
   bool isFieldValid(String name) {
     return _fields[name]?.value.isValid ?? false;
   }
-  
+
   /// التحقق من صحة النموذج بالكامل
   void _validateForm() {
     isValid.value = _fields.values.every((field) => field.value.isValid);
   }
-  
+
   /// الحصول على جميع قيم النموذج
   Map<String, dynamic> getValues() {
     final result = <String, dynamic>{};
@@ -62,7 +63,7 @@ class FormManager {
     }
     return result;
   }
-  
+
   /// إعادة تعيين النموذج
   void reset() {
     for (final field in _fields.values) {
@@ -72,7 +73,7 @@ class FormManager {
     isDirty.value = false;
     _validateForm();
   }
-  
+
   /// التحقق من صحة النموذج بالكامل
   bool validate() {
     for (final field in _fields.values) {
@@ -92,17 +93,13 @@ class FormField {
   String? error;
   bool isDirty = false;
   bool isValid = true;
-  
-  FormField({
-    required this.name,
-    this.value,
-    required this.validators,
-  });
-  
+
+  FormField({required this.name, this.value, required this.validators});
+
   /// التحقق من صحة الحقل
   void validate() {
     error = null;
-    
+
     for (final validator in validators) {
       final result = validator(value);
       if (result != null) {
@@ -111,10 +108,10 @@ class FormField {
         return;
       }
     }
-    
+
     isValid = true;
   }
-  
+
   /// إعادة تعيين الحقل
   void reset() {
     error = null;
@@ -137,7 +134,7 @@ class Validators {
       return null;
     };
   }
-  
+
   /// التحقق من أن القيمة بريد إلكتروني صحيح
   static FormValidator email(String message) {
     return (value) {
@@ -147,7 +144,7 @@ class Validators {
       return null;
     };
   }
-  
+
   /// التحقق من أن القيمة رقم هاتف صحيح
   static FormValidator phone(String message) {
     return (value) {
@@ -157,7 +154,7 @@ class Validators {
       return null;
     };
   }
-  
+
   /// التحقق من أن القيمة URL صحيح
   static FormValidator url(String message) {
     return (value) {
@@ -167,7 +164,7 @@ class Validators {
       return null;
     };
   }
-  
+
   /// التحقق من أن القيمة لا تقل عن الحد الأدنى
   static FormValidator minLength(int min, String message) {
     return (value) {
@@ -177,7 +174,7 @@ class Validators {
       return null;
     };
   }
-  
+
   /// التحقق من أن القيمة لا تزيد عن الحد الأقصى
   static FormValidator maxLength(int max, String message) {
     return (value) {
@@ -187,7 +184,7 @@ class Validators {
       return null;
     };
   }
-  
+
   /// التحقق من أن القيمة تطابق نمط معين
   static FormValidator pattern(RegExp pattern, String message) {
     return (value) {

@@ -26,19 +26,21 @@ class _SettingsPageState extends State<SettingsPage> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _autoCheckUpdates = prefs.getBool('auto_check_updates') ?? true;
-      _configUrl = prefs.getString('config_url') ?? 
-        'https://raw.githubusercontent.com/MohamedAboElnasrHassan/dev_server/main/app-config.json';
+      _configUrl =
+          prefs.getString('config_url') ??
+          'https://raw.githubusercontent.com/MohamedAboElnasrHassan/dev_server/main/app-config.json';
       _configUrlController.text = _configUrl;
     });
   }
 
   Future<void> _saveSettings() async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('auto_check_updates', _autoCheckUpdates);
     await prefs.setString('config_url', _configUrl);
-    
+
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessenger.showSnackBar(
         const SnackBar(content: Text('تم حفظ الإعدادات')),
       );
     }
@@ -47,9 +49,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('الإعدادات'),
-      ),
+      appBar: AppBar(title: const Text('الإعدادات')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -72,7 +72,7 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
             const SizedBox(height: 16),
-            
+
             // قسم عنوان التكوين
             const Text(
               'عنوان ملف التكوين',
@@ -90,7 +90,7 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
             const SizedBox(height: 16),
-            
+
             // قسم معلومات الإصدار
             const Text(
               'معلومات الإصدار',
@@ -104,7 +104,7 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
             const SizedBox(height: 16),
-            
+
             // زر حفظ الإعدادات
             Center(
               child: ElevatedButton(
@@ -112,15 +112,18 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: const Text('حفظ الإعدادات'),
               ),
             ),
-            
+
             // زر التحقق من التحديثات
             const SizedBox(height: 8),
             Center(
               child: ElevatedButton(
                 onPressed: () async {
-                  final hasUpdate = await widget.updateManager.checkForUpdates(force: true);
+                  final scaffoldMessenger = ScaffoldMessenger.of(context);
+                  final hasUpdate = await widget.updateManager.checkForUpdates(
+                    force: true,
+                  );
                   if (!hasUpdate && mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    scaffoldMessenger.showSnackBar(
                       const SnackBar(content: Text('لا توجد تحديثات جديدة')),
                     );
                   }
@@ -133,7 +136,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
-  
+
   @override
   void dispose() {
     _configUrlController.dispose();

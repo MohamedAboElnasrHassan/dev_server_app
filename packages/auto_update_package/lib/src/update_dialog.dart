@@ -8,7 +8,7 @@ class UpdateDialog extends StatefulWidget {
   final VersionInfo updateInfo;
   final VoidCallback? onSkip;
   final VoidCallback? onInstallComplete;
-  
+
   const UpdateDialog({
     Key? key,
     required this.updateManager,
@@ -16,7 +16,7 @@ class UpdateDialog extends StatefulWidget {
     this.onSkip,
     this.onInstallComplete,
   }) : super(key: key);
-  
+
   @override
   State<UpdateDialog> createState() => _UpdateDialogState();
 }
@@ -26,42 +26,46 @@ class _UpdateDialogState extends State<UpdateDialog> {
   double _downloadProgress = 0.0;
   String? _downloadedFilePath;
   String _statusMessage = '';
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     // Listen to download progress
-    widget.updateManager.downloadProgress.addListener(_onDownloadProgressChanged);
+    widget.updateManager.downloadProgress.addListener(
+      _onDownloadProgressChanged,
+    );
     widget.updateManager.isDownloading.addListener(_onDownloadStatusChanged);
   }
-  
+
   @override
   void dispose() {
-    widget.updateManager.downloadProgress.removeListener(_onDownloadProgressChanged);
+    widget.updateManager.downloadProgress.removeListener(
+      _onDownloadProgressChanged,
+    );
     widget.updateManager.isDownloading.removeListener(_onDownloadStatusChanged);
     super.dispose();
   }
-  
+
   void _onDownloadProgressChanged() {
     setState(() {
       _downloadProgress = widget.updateManager.downloadProgress.value;
     });
   }
-  
+
   void _onDownloadStatusChanged() {
     setState(() {
       _isDownloading = widget.updateManager.isDownloading.value;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final currentVersion = widget.updateManager.currentVersion.value;
     final latestVersion = widget.updateInfo.version;
     final isRequired = widget.updateInfo.required;
     final changeLog = widget.updateInfo.changeLog ?? 'تحديث جديد متاح';
-    
+
     return AlertDialog(
       title: Text('تحديث جديد متاح'),
       content: Column(
@@ -78,7 +82,9 @@ class _UpdateDialogState extends State<UpdateDialog> {
               children: [
                 LinearProgressIndicator(value: _downloadProgress),
                 SizedBox(height: 8),
-                Text('جاري التنزيل... ${(_downloadProgress * 100).toStringAsFixed(0)}%'),
+                Text(
+                  'جاري التنزيل... ${(_downloadProgress * 100).toStringAsFixed(0)}%',
+                ),
               ],
             ),
           if (_statusMessage.isNotEmpty)
@@ -101,35 +107,30 @@ class _UpdateDialogState extends State<UpdateDialog> {
             child: Text('تخطي'),
           ),
         if (_downloadedFilePath != null)
-          ElevatedButton(
-            onPressed: _installUpdate,
-            child: Text('تثبيت'),
-          )
+          ElevatedButton(onPressed: _installUpdate, child: Text('تثبيت'))
         else if (!_isDownloading)
-          ElevatedButton(
-            onPressed: _downloadUpdate,
-            child: Text('تنزيل'),
-          ),
+          ElevatedButton(onPressed: _downloadUpdate, child: Text('تنزيل')),
       ],
     );
   }
-  
+
   /// تنزيل التحديث
   Future<void> _downloadUpdate() async {
     setState(() {
       _isDownloading = true;
       _statusMessage = '';
     });
-    
+
     try {
       final filePath = await widget.updateManager.downloadUpdate();
-      
+
       setState(() {
         _isDownloading = false;
         _downloadedFilePath = filePath;
-        _statusMessage = filePath != null
-            ? 'تم التنزيل بنجاح'
-            : 'فشل التنزيل، يرجى المحاولة مرة أخرى';
+        _statusMessage =
+            filePath != null
+                ? 'تم التنزيل بنجاح'
+                : 'فشل التنزيل، يرجى المحاولة مرة أخرى';
       });
     } catch (e) {
       setState(() {
@@ -138,24 +139,27 @@ class _UpdateDialogState extends State<UpdateDialog> {
       });
     }
   }
-  
+
   /// تثبيت التحديث
   Future<void> _installUpdate() async {
     if (_downloadedFilePath == null) return;
-    
+
     setState(() {
       _statusMessage = 'جاري التثبيت...';
     });
-    
+
     try {
-      final success = await widget.updateManager.installUpdate(_downloadedFilePath!);
-      
+      final success = await widget.updateManager.installUpdate(
+        _downloadedFilePath!,
+      );
+
       setState(() {
-        _statusMessage = success
-            ? 'تم بدء التثبيت'
-            : 'فشل بدء التثبيت، يرجى المحاولة مرة أخرى';
+        _statusMessage =
+            success
+                ? 'تم بدء التثبيت'
+                : 'فشل بدء التثبيت، يرجى المحاولة مرة أخرى';
       });
-      
+
       if (success) {
         if (widget.onInstallComplete != null) {
           widget.onInstallComplete!();
